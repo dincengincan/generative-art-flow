@@ -18,17 +18,24 @@ class Particle {
     this.effect = effect;
     this.x = Math.floor(Math.random() * this.effect.width);
     this.y = Math.floor(Math.random() * this.effect.height);
+    this.speedX = Math.random() * 4 - 2;
+    this.speedY = Math.random() * 4 - 2;
   }
 
   draw() {
-    ctx.fillRect(this.x, this.y, 50, 50);
+    ctx.fillRect(this.x, this.y, 10, 10);
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
   }
 }
 
 class Effect {
   constructor(width, height) {
-    this.width = width;
     this.height = height;
+    this.width = width;
     this.particles = [];
     this.numberOfParticles = 50;
     this.init();
@@ -43,10 +50,18 @@ class Effect {
   render(context) {
     this.particles.forEach((particle) => {
       particle.draw(context);
+      particle.update();
     });
   }
 }
 
 const effect = new Effect(canvas.width, canvas.height);
 
-effect.render(ctx);
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  effect.render(ctx);
+
+  requestAnimationFrame(animate);
+}
+
+animate();
