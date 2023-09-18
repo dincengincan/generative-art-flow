@@ -24,7 +24,8 @@ class Particle {
     this.speedY = Math.random() * 4 - 2;
     this.history = [{ x: this.x, y: this.y }];
     this.lifeSpan = Math.floor(Math.random() * 100 + 20);
-    this.wiggle = 4;
+    this.wiggle = 0;
+    this.angle = 5;
   }
 
   draw(context) {
@@ -40,8 +41,17 @@ class Particle {
   }
 
   update() {
-    this.x += this.speedX + Math.random() * (this.wiggle * 2) - this.wiggle;
-    this.y += this.speedY + Math.random() * (this.wiggle * 2) - this.wiggle;
+    this.angle += 0.5;
+    this.x +=
+      this.speedX +
+      //   Math.random() * (this.wiggle * 2) -
+      //   this.wiggle +
+      Math.sin(this.angle) * 3;
+    this.y +=
+      this.speedY +
+      //   Math.random() * (this.wiggle * 2) -
+      //   this.wiggle +
+      Math.cos(this.angle) * 2;
     this.history.push({ x: this.x, y: this.y });
 
     if (this.history.length > this.lifeSpan) {
