@@ -5,12 +5,14 @@ canvas.height = window.innerHeight;
 
 ctx.fillStyle = "white";
 ctx.strokeStyle = "white";
-ctx.lineWidth = 20;
+ctx.lineWidth = 1;
 ctx.lineCap = "round";
 
 // ctx.beginPath();
-// ctx.moveTo(100, 100);
+// ctx.moveTo(25, 100);
+// ctx.lineTo(50, 50);
 // ctx.lineTo(200, 200);
+// ctx.lineTo(300, 400);
 // ctx.stroke();
 
 class Particle {
@@ -20,15 +22,31 @@ class Particle {
     this.y = Math.floor(Math.random() * this.effect.height);
     this.speedX = Math.random() * 4 - 2;
     this.speedY = Math.random() * 4 - 2;
+    this.history = [{ x: this.x, y: this.y }];
+    this.lifeSpan = 50;
   }
 
-  draw() {
-    ctx.fillRect(this.x, this.y, 10, 10);
+  draw(context) {
+    context.fillRect(this.x, this.y, 10, 10);
+    context.beginPath();
+    context.moveTo(this.history[0].x, this.history[0].y);
+
+    for (let i = 1; i < this.history.length; i++) {
+      context.lineTo(this.history[i].x, this.history[i].y);
+    }
+
+    context.stroke();
   }
 
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
+    this.history.push({ x: this.x, y: this.y });
+
+    console.log(this.history.length);
+    if (this.history.length > this.lifeSpan) {
+      this.history.shift();
+    }
   }
 }
 
@@ -37,7 +55,7 @@ class Effect {
     this.height = height;
     this.width = width;
     this.particles = [];
-    this.numberOfParticles = 50;
+    this.numberOfParticles = 5;
     this.init();
   }
 
