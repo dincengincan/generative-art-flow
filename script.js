@@ -23,7 +23,8 @@ class Particle {
     this.speedX = Math.random() * 4 - 2;
     this.speedY = Math.random() * 4 - 2;
     this.history = [{ x: this.x, y: this.y }];
-    this.lifeSpan = 50;
+    this.lifeSpan = Math.floor(Math.random() * 100 + 20);
+    this.wiggle = 4;
   }
 
   draw(context) {
@@ -39,11 +40,10 @@ class Particle {
   }
 
   update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
+    this.x += this.speedX + Math.random() * (this.wiggle * 2) - this.wiggle;
+    this.y += this.speedY + Math.random() * (this.wiggle * 2) - this.wiggle;
     this.history.push({ x: this.x, y: this.y });
 
-    console.log(this.history.length);
     if (this.history.length > this.lifeSpan) {
       this.history.shift();
     }
@@ -55,7 +55,7 @@ class Effect {
     this.height = height;
     this.width = width;
     this.particles = [];
-    this.numberOfParticles = 5;
+    this.numberOfParticles = 10;
     this.init();
   }
 
