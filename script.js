@@ -3,11 +3,6 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-ctx.fillStyle = "white";
-ctx.strokeStyle = "white";
-ctx.lineWidth = 1;
-ctx.lineCap = "round";
-
 // ctx.beginPath();
 // ctx.moveTo(25, 100);
 // ctx.lineTo(50, 50);
@@ -22,10 +17,9 @@ class Particle {
     this.y = Math.floor(Math.random() * this.effect.height);
     this.speedX;
     this.speedY;
-    this.speedModifier = Math.floor(Math.random() * 5 + 1);
+    this.speedModifier = Math.floor(Math.random() * 1 + 1);
     this.history = [{ x: this.x, y: this.y }];
-    this.lifeSpan = Math.floor(Math.random() * 100 + 20);
-    this.wiggle = 0;
+    this.lifeSpan = Math.floor(Math.random() * 300 + 100);
     this.angle = 5;
     this.timer = this.lifeSpan * 2;
   }
@@ -37,6 +31,8 @@ class Particle {
     for (let i = 1; i < this.history.length; i++) {
       context.lineTo(this.history[i].x, this.history[i].y);
     }
+    context.strokeStyle = "white";
+    ctx.lineCap = "round";
 
     context.stroke();
   }
@@ -79,20 +75,31 @@ class Effect {
     this.height = height;
     this.width = width;
     this.particles = [];
-    this.numberOfParticles = 1200;
+    this.numberOfParticles = 1500;
     this.cellSize = 20;
     this.rows;
     this.cols;
     this.flowField = [];
-    this.curve = 1;
-    this.zoom = 0.05;
+    this.curve = 1.8;
+    this.zoom = 0.1;
     this.init();
+
+    window.addEventListener("resize", (e) => {
+      this.height = e.target.innerHeight;
+      this.width = e.target.innerWidth;
+
+      canvas.height = this.height;
+      canvas.width = this.width;
+
+      this.init();
+    });
   }
 
   init() {
     // create flow field
     this.rows = Math.floor(this.height / this.cellSize);
     this.cols = Math.floor(this.width / this.cellSize);
+    this.flowField = [];
 
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.cols; x++) {
@@ -103,6 +110,7 @@ class Effect {
     }
 
     // create particles
+    this.particles = [];
     for (let i = 0; i < this.numberOfParticles; i++) {
       this.particles.push(new Particle(this));
     }
